@@ -8,12 +8,12 @@ type _DocTestReadme = ();
 use serde::{Serialize, Serializer};
 
 pub trait SerializeSeed {
-    type Value;
+    type Value: ?Sized;
 
     fn serialize<S: Serializer>(&self, value: &Self::Value, serializer: S) -> Result<S::Ok, S::Error>;
 }
 
-pub struct ValueWithSeed<'a, Value, Seed>(pub &'a Value, pub Seed);
+pub struct ValueWithSeed<'a, Value: ?Sized, Seed>(pub &'a Value, pub Seed);
 
 impl<'a, Value, Seed: SerializeSeed<Value=Value>> Serialize for ValueWithSeed<'a, Value, Seed> {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {

@@ -18,6 +18,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest, macOS-latest]
         rust: ["1.59", stable, beta, nightly]
+        features: ["", "--features=alloc"]
     runs-on: ${{ matrix.os }}
     steps:
     - uses: actions-rs/toolchain@v1
@@ -26,13 +27,13 @@ jobs:
         override: true
     - run: "rustup component add clippy"
     - uses: actions/checkout@v2
-    - run: "cargo build --verbose"
-    - run: "cargo test --verbose --tests"
-    - run: "cargo test --verbose --doc"
-    - run: "cargo doc --verbose"
-    - run: "cargo build --verbose --release"
-    - run: "cargo outdated --verbose --aggresssive --root-deps-only --exit-code 1"
-    - run: "cargo clippy --verbose"
+    - run: "cargo build --verbose --no-default-features ${{ matrix.features }}"
+    - run: "cargo test --verbose --tests --no-default-features ${{ matrix.features }}"
+    - run: "cargo test --verbose --doc --no-default-features ${{ matrix.features }}"
+    - run: "cargo doc --verbose --no-default-features ${{ matrix.features }}"
+    - run: "cargo build --verbose --release --no-default-features ${{ matrix.features }}"
+    - run: "cargo outdated --verbose --aggresssive --root-deps-only --exit-code 1 ${{ matrix.features }}"
+    - run: "cargo clippy --verbose --no-default-features ${{ matrix.features }}"
   ensure_no_std:
     strategy:
       fail-fast: false

@@ -15,7 +15,7 @@ pub trait SerializeSeed {
 
 pub struct ValueWithSeed<'a, Value: ?Sized, Seed>(pub &'a Value, pub Seed);
 
-impl<'a, Value, Seed: SerializeSeed<Value=Value>> Serialize for ValueWithSeed<'a, Value, Seed> {
+impl<'a, Value: ?Sized, Seed: SerializeSeed<Value=Value>> Serialize for ValueWithSeed<'a, Value, Seed> {
     fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         self.1.serialize(self.0, serializer)
     }

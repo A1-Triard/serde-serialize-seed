@@ -53,6 +53,7 @@ mod complex_type {
 
 use complex_type::*;
 use serde::de::DeserializeSeed;
+use serde_serialize_seed::ValueWithSeed;
 
 fn main() {
     let x = ComplexType(10);

@@ -112,6 +112,75 @@ impl<'de, U: DeserializeSeed<'de>, V: DeserializeSeed<'de>> DeserializeSeed<'de>
     }
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct Tuple4Serde<T1, T2, T3, T4>(pub T1, pub T2, pub T3, pub T4);
+
+impl<
+    T1: SerializeSeed,
+    T2: SerializeSeed,
+    T3: SerializeSeed,
+    T4: SerializeSeed
+> SerializeSeed for Tuple4Serde<T1, T2, T3, T4> where
+    T1::Value: Sized, T2::Value: Sized, T3::Value: Sized, T4::Value: Sized
+{
+    type Value = (T1::Value, T2::Value, T3::Value, T4::Value);
+
+    fn serialize<S: Serializer>(&self, value: &Self::Value, serializer: S) -> Result<S::Ok, S::Error> {
+        let mut serializer = serializer.serialize_tuple(4)?;
+        serializer.serialize_element(&ValueWithSeed(&value.0, &self.0))?;
+        serializer.serialize_element(&ValueWithSeed(&value.1, &self.1))?;
+        serializer.serialize_element(&ValueWithSeed(&value.2, &self.2))?;
+        serializer.serialize_element(&ValueWithSeed(&value.3, &self.3))?;
+        serializer.end()
+    }
+}
+
+struct Tuple4DeVisitor<T1, T2, T3, T4>(Tuple4Serde<T1, T2, T3, T4>);
+
+impl<
+    'de,
+    T1: DeserializeSeed<'de>,
+    T2: DeserializeSeed<'de>,
+    T3: DeserializeSeed<'de>,
+    T4: DeserializeSeed<'de>
+> de::Visitor<'de> for Tuple4DeVisitor<T1, T2, T3, T4> where
+    T1::Value: Sized, T2::Value: Sized, T3::Value: Sized, T4::Value: Sized
+{
+    type Value = (T1::Value, T2::Value, T3::Value, T4::Value);
+
+    fn expecting(&self, f: &mut Formatter) -> fmt::Result {
+        write!(f, "tuple 4")
+    }
+
+    fn visit_seq<A>(self, mut seq: A) -> Result<Self::Value, A::Error> where A: SeqAccess<'de> {
+        let t1 = seq.next_element_seed(self.0.0)?
+            .ok_or_else(|| A::Error::invalid_length(0, &"tuple 4"))?;
+        let t2 = seq.next_element_seed(self.0.1)?
+            .ok_or_else(|| A::Error::invalid_length(1, &"tuple 4"))?;
+        let t3 = seq.next_element_seed(self.0.2)?
+            .ok_or_else(|| A::Error::invalid_length(2, &"tuple 4"))?;
+        let t4 = seq.next_element_seed(self.0.3)?
+            .ok_or_else(|| A::Error::invalid_length(3, &"tuple 4"))?;
+        Ok((t1, t2, t3, t4))
+    }
+}
+
+impl<
+    'de,
+    T1: DeserializeSeed<'de>,
+    T2: DeserializeSeed<'de>,
+    T3: DeserializeSeed<'de>,
+    T4: DeserializeSeed<'de>
+> DeserializeSeed<'de> for Tuple4Serde<T1, T2, T3, T4> where
+    T1::Value: Sized, T2::Value: Sized, T3::Value: Sized, T4::Value: Sized
+{
+    type Value = (T1::Value, T2::Value, T3::Value, T4::Value);
+
+    fn deserialize<D: Deserializer<'de>>(self, deserializer: D) -> Result<Self::Value, D::Error> {
+        deserializer.deserialize_tuple(4, Tuple4DeVisitor(self))
+    }
+}
+
 #[cfg(feature="alloc")]
 #[derive(Debug, Clone, Copy)]
 pub struct VecSerde<T>(pub T);

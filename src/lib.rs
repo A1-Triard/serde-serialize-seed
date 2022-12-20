@@ -50,9 +50,9 @@ impl<'a, Value: ?Sized, Seed: SerializeSeed<Value=Value>> Serialize for ValueWit
 }
 
 #[derive(Debug, Clone, Copy)]
-pub struct Stateless<T: ?Sized>(pub PhantomType<T>);
+pub struct StatelessSerde<T: ?Sized>(pub PhantomType<T>);
 
-impl<T: Serialize + ?Sized> SerializeSeed for Stateless<T> {
+impl<T: Serialize + ?Sized> SerializeSeed for StatelessSerde<T> {
     type Value = T;
 
     fn serialize<S: Serializer>(&self, value: &Self::Value, serializer: S) -> Result<S::Ok, S::Error> {
@@ -60,7 +60,7 @@ impl<T: Serialize + ?Sized> SerializeSeed for Stateless<T> {
     }
 }
 
-impl<'de, T: Deserialize<'de>> DeserializeSeed<'de> for Stateless<T> {
+impl<'de, T: Deserialize<'de>> DeserializeSeed<'de> for StatelessSerde<T> {
     type Value = T;
 
     fn deserialize<D: Deserializer<'de>>(self, deserializer: D) -> Result<Self::Value, D::Error> {

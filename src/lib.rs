@@ -13,13 +13,10 @@ type _DocTestReadme = ();
 
 #[cfg(feature="alloc")]
 use alloc::vec::Vec;
-#[cfg(feature="alloc")]
 use core::fmt::{self, Formatter};
 use phantom_type::PhantomType;
 use serde::{Serialize, Serializer};
-#[cfg(feature="alloc")]
 use serde::{Deserialize, Deserializer};
-#[cfg(feature="alloc")]
 use serde::de::{self, DeserializeSeed, SeqAccess};
 use serde::de::Error as de_Error;
 use serde::ser::SerializeTuple;

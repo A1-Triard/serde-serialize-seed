@@ -1,8 +1,8 @@
 [package]
 edition = "2021"
 name = "serde-serialize-seed"
-version = "0.0.7"
-rust-version = "1.59"
+version = "0.0.8"
+rust-version = "1.60"
 authors = ["warlock <internalmike@gmail.com>"]
 description = "The `SerializeSeed` trait for convinience."
 readme = "README.md"

@@ -13,4 +13,4 @@ panic = "abort"
 [dependencies]
 serde = { version = "1.0.151", default-features = false }
 serde-serialize-seed = { path = "..", default-features = false }
-exit-no-std = "0.1.0"
+exit-no-std = "0.2.0"

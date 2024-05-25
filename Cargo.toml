@@ -2,7 +2,7 @@
 edition = "2021"
 name = "serde-serialize-seed"
 version = "0.0.10"
-rust-version = "1.60"
+rust-version = "1.70"
 authors = ["warlock <internalmike@gmail.com>"]
 description = "The `SerializeSeed` trait for convinience."
 readme = "README.md"

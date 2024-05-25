@@ -1,4 +1,5 @@
 #![deny(warnings)]
+#![allow(clippy::needless_doctest_main)]
 
 #![cfg_attr(not(test), no_std)]
 
